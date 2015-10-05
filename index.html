@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html ng-app="falemais">
+	<head>
+		<meta charset="utf-8">
+		<title>FaleMais</title>
+
+		<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
+
+		<link rel="stylesheet" href="bower_components/angular-material/angular-material.css">
+		<link rel="stylesheet" href="style.css" media="screen" title="no title" charset="utf-8">
+		<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+
+	</head>
+	<body layout="column">
+
+		<div class="container">
+			<md-content>
+				<md-toolbar layout="row" class="bar">
+		      <div class="md-toolbar-tools">
+		        <h1>FaleMais - Quanto vou pagar?</h1>
+		      </div>
+		    </md-toolbar>
+			</md-content>
+
+
+
+			<div ng-controller="faleMais as ctrl" layout="column">
+			  <md-content class="md-padding">
+			    <form ng-submit="$event.preventDefault()">
+
+						<div layout="column" layout-align="center center">
+							<div layout="row">
+								<md-input-container>
+									<label>DDD Origem</label>
+									<md-select ng-model="dddOrigem.origem" ng-init="dddOrigem=false">
+										<md-option ng-repeat="fee in fees | unique: 'origem' | orderBy:'origem'" value="{{fee.origem}}">{{fee.origem}}</md-option>
+									</md-select>
+								</md-input-container>
+
+								<md-input-container>
+									<label>DDD Destino</label>
+									<md-select ng-model="dddDestino.destino">
+										<md-option ng-if="dddOrigem" ng-repeat="fee in fees | filter:dddOrigem | orderBy:'destino'" value="{{fee.destino}}">{{fee.destino}}</md-option>
+									</md-select>
+								</md-input-container>
+								<md-input-container>
+									<label>Quanto tempo deseja falar</label>
+									<input type="number" step="any" name="duration" ng-model="duration" min="1" max="4999">
+								</md-input-container>
+							</div>
+							<div class="btn-group">
+					        <label class="btn btn-primary" ng-model="plano" btn-radio="1">Sem FaleMais</label>
+					        <label class="btn btn-primary" ng-model="plano" btn-radio="2">FaleMais 30</label>
+					        <label class="btn btn-primary" ng-model="plano" btn-radio="3">FaleMais 60</label>
+					        <label class="btn btn-primary" ng-model="plano" btn-radio="4">FaleMais 120</label>
+					    </div>
+
+
+							<div class="tabela">
+								<table class="table table-bordered" ng-show="plano">
+								  <tr>
+										<th>Sem FaleMais</th>
+										<th>Com FaleMais 30</th>
+										<th>Com FaleMais 60</th>
+										<th>Com FaleMais 120</th>
+									</tr>
+								  <tr ng-repeat="fee in fees | filter:dddOrigem | filter:dddDestino">
+								    <td ng-class="{destaque: plano == 1}"><span>{{fee.taxaMinuto * duration | currency}}</span></td>
+								    <td ng-class="{destaque: plano == 2}"><span>{{faleMais30(fee.taxaMinuto, duration) | currency}}</span></td>
+								    <td ng-class="{destaque: plano == 3}"><span>{{faleMais60(fee.taxaMinuto, duration) | currency}}</span></td>
+								    <td ng-class="{destaque: plano == 4}"><span>{{faleMais120(fee.taxaMinuto, duration) | currency}}</span></td>
+								  </tr>
+								</table>
+							</div>
+
+
+						</div>
+
+			    </form>
+			  </md-content>
+			</div>
+
+		</div>
+
+
+		<script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/angular-aria/angular-aria.js"></script>
+    <script src="bower_components/angular-animate/angular-animate.js"></script>
+    <script src="bower_components/angular-material/angular-material.js"></script>
+    <script src="bower_components/angular-bootstrap/ui-bootstrap.min.js"></script>
+    <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+		<script src="bower_components/angular-i18n/angular-locale_pt-br.js"></script>
+		<script src="bower_components/angular-filter/dist/angular-filter.min.js" charset="utf-8"></script>
+
+
+
+		<script src="app.js" charset="utf-8"></script>
+
+	</body>
+</html>
